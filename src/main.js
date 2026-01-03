@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const Store = require('electron-store');
 
 // Disable GPU acceleration for better compatibility
@@ -44,7 +45,6 @@ function createWindow() {
 
     // Add icon if it exists
     const iconPath = path.join(__dirname, '../assets/icon.png');
-    const fs = require('fs');
     if (fs.existsSync(iconPath)) {
       windowOptions.icon = iconPath;
       console.log('Icon loaded from:', iconPath);
@@ -217,7 +217,16 @@ app.whenReady().then(() => {
   createWindow();
 }).catch(err => {
   console.error('App failed to become ready:', err);
-  dialog.showErrorBox('Startup Error', 'Application failed to start: ' + err.message);
+  // Only try to show error dialog if app is actually ready
+  if (app.isReady()) {
+    try {
+      dialog.showErrorBox('Startup Error', 'Application failed to start: ' + err.message);
+    } catch (e) {
+      console.error('Failed to show error dialog:', e);
+    }
+  }
+  // Exit with error code
+  process.exit(1);
 });
 
 app.on('window-all-closed', () => {

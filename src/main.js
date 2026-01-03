@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
+const tuyaService = require('./services/tuyaService');
 
 // Disable GPU acceleration for better compatibility
 app.disableHardwareAcceleration();
@@ -180,9 +181,39 @@ function createMenu() {
 
 // IPC Handlers
 ipcMain.handle('get-devices', async () => {
-  // Placeholder for Tuya API integration
-  // In production, this would connect to Tuya Cloud API
-  return store.get('devices', []);
+  try {
+    // Check if API is configured
+    const config = {
+      apiKey: store.get('apiKey', ''),
+      apiSecret: store.get('apiSecret', ''),
+      endpoint: store.get('endpoint', 'https://openapi.tuyaus.com')
+    };
+
+    if (!config.apiKey || !config.apiSecret) {
+      console.log('API not configured, returning stored devices');
+      return store.get('devices', []);
+    }
+
+    // Initialize Tuya API if not already initialized
+    if (!tuyaService.isConnected()) {
+      await tuyaService.initialize(config);
+    }
+
+    // Fetch devices from Tuya Cloud
+    const devices = await tuyaService.getDevices();
+    
+    // Cache devices locally
+    store.set('devices', devices);
+    
+    console.log(`Fetched ${devices.length} devices from Tuya Cloud`);
+    return devices;
+  } catch (error) {
+    console.error('Error getting devices:', error);
+    // Fallback to cached devices on error
+    const cachedDevices = store.get('devices', []);
+    console.log(`Returning ${cachedDevices.length} cached devices due to error`);
+    return cachedDevices;
+  }
 });
 
 ipcMain.handle('save-devices', async (event, devices) => {
@@ -199,16 +230,81 @@ ipcMain.handle('get-user-config', async () => {
 });
 
 ipcMain.handle('save-user-config', async (event, config) => {
-  store.set('apiKey', config.apiKey);
-  store.set('apiSecret', config.apiSecret);
-  store.set('endpoint', config.endpoint);
-  return { success: true };
+  try {
+    // Save configuration
+    store.set('apiKey', config.apiKey);
+    store.set('apiSecret', config.apiSecret);
+    store.set('endpoint', config.endpoint);
+    
+    // Initialize Tuya API with new config
+    if (config.apiKey && config.apiSecret && config.endpoint) {
+      await tuyaService.initialize(config);
+      console.log('Tuya API initialized with new configuration');
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving config:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 ipcMain.handle('control-device', async (event, deviceId, command) => {
-  // Placeholder for device control via Tuya API
-  console.log(`Control device ${deviceId} with command:`, command);
-  return { success: true, message: 'Command sent successfully' };
+  try {
+    // Check if API is initialized
+    if (!tuyaService.isConnected()) {
+      const config = {
+        apiKey: store.get('apiKey', ''),
+        apiSecret: store.get('apiSecret', ''),
+        endpoint: store.get('endpoint', 'https://openapi.tuyaus.com')
+      };
+      
+      if (!config.apiKey || !config.apiSecret) {
+        throw new Error('API not configured. Please configure your API settings first.');
+      }
+      
+      await tuyaService.initialize(config);
+    }
+
+    // Send command to device
+    const result = await tuyaService.controlDevice(deviceId, command);
+    console.log(`Device ${deviceId} controlled successfully:`, command);
+    
+    return result;
+  } catch (error) {
+    console.error(`Error controlling device ${deviceId}:`, error);
+    return { success: false, message: error.message };
+  }
+});
+
+// Add new IPC handler for testing connection
+ipcMain.handle('test-connection', async () => {
+  try {
+    const config = {
+      apiKey: store.get('apiKey', ''),
+      apiSecret: store.get('apiSecret', ''),
+      endpoint: store.get('endpoint', 'https://openapi.tuyaus.com')
+    };
+    
+    if (!config.apiKey || !config.apiSecret) {
+      return { success: false, message: 'API credentials not configured' };
+    }
+    
+    if (!tuyaService.isConnected()) {
+      await tuyaService.initialize(config);
+    }
+    
+    const isConnected = await tuyaService.testConnection();
+    
+    if (isConnected) {
+      return { success: true, message: 'Successfully connected to Tuya Cloud' };
+    } else {
+      return { success: false, message: 'Failed to connect to Tuya Cloud' };
+    }
+  } catch (error) {
+    console.error('Connection test failed:', error);
+    return { success: false, message: error.message };
+  }
 });
 
 // App lifecycle

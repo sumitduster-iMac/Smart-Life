@@ -12,6 +12,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getUserConfig: () => ipcRenderer.invoke('get-user-config'),
   saveUserConfig: (config) => ipcRenderer.invoke('save-user-config', config),
   
+  // Connection testing
+  testConnection: () => ipcRenderer.invoke('test-connection'),
+  
   // Event listeners
   onOpenPreferences: (callback) => ipcRenderer.on('open-preferences', callback)
 });

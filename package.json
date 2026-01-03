@@ -1,0 +1,61 @@
+{
+  "name": "smart-life-mac",
+  "version": "1.0.0",
+  "description": "Smart Life application for Intel Mac - Control your smart home devices using Tuya IoT platform",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac --x64",
+    "build:dmg": "electron-builder --mac dmg --x64",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "smart-home",
+    "tuya",
+    "iot",
+    "smart-life",
+    "mac",
+    "electron"
+  ],
+  "author": "Smart Life",
+  "license": "MIT",
+  "build": {
+    "appId": "com.smartlife.mac",
+    "productName": "Smart Life",
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64"]
+        }
+      ],
+      "category": "public.app-category.lifestyle",
+      "icon": "assets/icon.icns"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    }
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sumitduster-iMac/Smart-Life.git"
+  }
+}

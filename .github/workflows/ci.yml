@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Validate package.json
+      run: node -e "JSON.parse(require('fs').readFileSync('package.json'))"
+    
+    - name: Check JavaScript syntax
+      run: |
+        node --check src/main.js
+        node --check src/preload.js
+    
+    - name: Validate project structure
+      run: |
+        test -f package.json
+        test -f src/main.js
+        test -f src/preload.js
+        test -f src/renderer.js
+        test -f src/index.html
+        test -f src/styles.css
+        test -f README.md
+        echo "✓ All required files present"

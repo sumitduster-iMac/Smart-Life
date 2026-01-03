@@ -12,6 +12,31 @@ class TuyaService {
   }
 
   /**
+   * Parse Tuya API error and return user-friendly message
+   * @param {Error} error - Error object
+   * @returns {string} - User-friendly error message
+   */
+  parseErrorMessage(error) {
+    const message = error.message || '';
+    
+    if (message.includes('1004')) {
+      return 'Invalid API credentials. Please check your API Key and Secret.';
+    } else if (message.includes('1106')) {
+      return 'API permission denied. Please enable the necessary API permissions in your Tuya project.';
+    } else if (message.includes('1010')) {
+      return 'Wrong endpoint region. Please select the correct region for your account.';
+    } else if (message.includes('28841105')) {
+      return 'Rate limit exceeded. Please wait a few seconds and try again.';
+    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      return 'Cannot reach Tuya Cloud. Check your internet connection and endpoint URL.';
+    } else if (error.code === 'ETIMEDOUT') {
+      return 'Connection to Tuya Cloud timed out. Check your network connection.';
+    } else {
+      return message || 'Unknown error occurred';
+    }
+  }
+
+  /**
    * Initialize Tuya API connection
    * @param {Object} config - Configuration object
    * @param {string} config.apiKey - Tuya API Key (Access ID)
@@ -107,7 +132,9 @@ class TuyaService {
 
       // If no devices found and we have errors, provide helpful message
       if (devices.length === 0 && lastError) {
-        throw new Error(`Unable to fetch devices from Tuya Cloud. ${lastError}. Please verify: 1) Your API credentials are correct, 2) You have devices linked to your Tuya account, 3) Your API project has the necessary permissions enabled.`);
+        const errorMsg = `Unable to fetch devices from Tuya Cloud. ${lastError}`;
+        const helpMsg = '\n\nPlease verify:\n1) API credentials are correct\n2) Devices are linked to your Tuya account\n3) API project has necessary permissions enabled';
+        throw new Error(errorMsg + helpMsg);
       }
 
       // Transform devices to our format
@@ -115,13 +142,10 @@ class TuyaService {
     } catch (error) {
       console.error('Error fetching devices from Tuya:', error);
       
-      // Provide more specific error messages
-      if (error.message.includes('1004')) {
-        throw new Error('Invalid API credentials. Please check your API Key and Secret.');
-      } else if (error.message.includes('1106')) {
-        throw new Error('API permission denied. Please enable the necessary API permissions in your Tuya project.');
-      } else if (error.message.includes('1010')) {
-        throw new Error('Wrong endpoint region. Please select the correct region for your account.');
+      // Use helper to parse error message
+      const parsedMessage = this.parseErrorMessage(error);
+      if (parsedMessage !== error.message) {
+        throw new Error(parsedMessage);
       } else {
         throw error;
       }
@@ -353,21 +377,16 @@ class TuyaService {
     } catch (error) {
       console.error('Connection test failed:', error);
       
-      // Provide detailed error messages
-      if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-        throw new Error('Cannot reach Tuya Cloud. Check your internet connection and endpoint URL.');
-      } else if (error.code === 'ETIMEDOUT') {
-        throw new Error('Connection to Tuya Cloud timed out. Check your network connection.');
-      } else if (error.message && error.message.includes('1004')) {
+      // Use helper to parse error message and add context for signature errors
+      const parsedMessage = this.parseErrorMessage(error);
+      if (parsedMessage.includes('Invalid API credentials')) {
         throw new Error('Invalid API credentials (signature error). Please verify your API Key and Secret.');
-      } else if (error.message && error.message.includes('1106')) {
+      } else if (parsedMessage.includes('API permission denied')) {
         throw new Error('Invalid API permissions. Please ensure your Tuya project has the necessary API permissions enabled.');
-      } else if (error.message && error.message.includes('1010')) {
+      } else if (parsedMessage.includes('Wrong endpoint region')) {
         throw new Error('Incorrect endpoint region. Please select the correct region for your Tuya account.');
-      } else if (error.message && error.message.includes('28841105')) {
-        throw new Error('Rate limit exceeded. Please wait a few seconds and try again.');
       } else {
-        throw new Error(error.message || 'Failed to connect to Tuya Cloud');
+        throw new Error(parsedMessage || 'Failed to connect to Tuya Cloud');
       }
     }
   }

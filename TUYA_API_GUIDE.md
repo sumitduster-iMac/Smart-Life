@@ -230,24 +230,94 @@ The `@tuya/tuya-connector-nodejs` package includes `axios` with known vulnerabil
 
 ## Troubleshooting
 
+### "Failed to connect to Tuya Cloud"
+
+**Step 1: Ensure Dependencies are Installed**
+```bash
+npm install
+```
+This is the most common issue - the Tuya SDK must be installed before the app can connect.
+
+**Step 2: Verify API Credentials**
+- No extra spaces in API Key or Secret
+- Copy directly from Tuya IoT Platform
+- Use "Test Connection" button to verify
+
+**Step 3: Check Endpoint Region**
+- US: `https://openapi.tuyaus.com`
+- EU: `https://openapi.tuyaeu.com`
+- CN: `https://openapi.tuyacn.com`
+- IN: `https://openapi.tuyain.com`
+
+**Step 4: Verify API Permissions**
+Go to [Tuya IoT Platform](https://iot.tuya.com/):
+1. Select your project
+2. Click "API Products" or "Link Devices"
+3. Enable "IoT Core" APIs
+4. Subscribe to required API products
+
+### Common Error Messages
+
+**"Invalid API credentials (signature error)"**
+- API Key or Secret is incorrect
+- Extra spaces in credentials
+- Credentials copied incorrectly
+
+**"Invalid API permissions"**
+- API products not subscribed in Tuya project
+- Missing "IoT Core" API permissions
+- Project not properly configured
+
+**"Incorrect endpoint region"**
+- Wrong data center selected
+- Account is in different region
+- Check account region in Tuya IoT Platform
+
+**"Cannot reach Tuya Cloud"**
+- No internet connection
+- Firewall blocking requests
+- Proxy configuration issue
+
 ### Devices Not Loading
 1. Verify API credentials are correct
 2. Check your internet connection
 3. Ensure you selected the correct region
 4. Verify devices are online in Tuya mobile app
-5. Check console logs for error messages
+5. Check that devices are under the same Tuya account
+6. Ensure API project has device access permissions
+7. Check console logs for detailed error messages
 
 ### Device Control Not Working
 1. Ensure device is online
 2. Check that device supports the command type
 3. Verify your Tuya project has necessary permissions
 4. Try controlling device via Tuya mobile app first
+5. Check device category and supported commands
 
 ### Connection Test Fails
-1. Double-check API Key and Secret
-2. Verify endpoint region matches your account
-3. Check firewall/proxy settings
-4. Ensure your Tuya project is active
+1. Run `npm install` first
+2. Double-check API Key and Secret (no spaces)
+3. Verify endpoint region matches your account
+4. Check firewall/proxy settings
+5. Ensure your Tuya project is active and has API permissions
+6. Try creating a new project in Tuya IoT Platform
+7. Check that you're using Cloud Development (not Smart Home)
+
+### Debugging Tips
+
+**Enable Detailed Logging:**
+Open DevTools in the app (View > Developer Tools) to see detailed error messages.
+
+**Check API Response:**
+Look for error codes in console:
+- `1004`: Invalid signature (wrong credentials)
+- `1106`: Permission denied (enable API permissions)
+- `1010`: Token expired or invalid endpoint
+- `28841105`: Rate limit exceeded
+
+**Test API Directly:**
+Use Tuya's API explorer to test your credentials:
+https://developer.tuya.com/en/demo
 
 ## Future Enhancements
 

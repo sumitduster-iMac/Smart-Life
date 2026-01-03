@@ -198,6 +198,42 @@ xattr -d com.apple.quarantine ~/Downloads/Smart\ Life-*.dmg
 
 **Detailed Instructions:** See [INSTALL.md](INSTALL.md) for comprehensive troubleshooting steps including System Preferences methods.
 
+### Can't connect to Tuya Cloud
+
+**Most Common Issues:**
+
+1. **"Failed to connect to Tuya Cloud"**
+   - Run `npm install` to ensure all dependencies are installed
+   - Verify your API credentials are correct (no extra spaces)
+   - Ensure you selected the correct API endpoint region for your account
+   - Check your internet connection
+
+2. **"Invalid API credentials (signature error)"**
+   - Double-check your API Key (Access ID) and API Secret
+   - Copy credentials carefully from Tuya IoT Platform
+   - Ensure no extra spaces or characters
+
+3. **"Invalid API permissions"**
+   - Go to your Tuya project in [Tuya IoT Platform](https://iot.tuya.com/)
+   - Click "API Products" or "Link Devices"
+   - Enable necessary API permissions (e.g., "IoT Core" APIs)
+   - Subscribe to required API products
+
+4. **"Incorrect endpoint region"**
+   - Verify your data center region in Tuya IoT Platform
+   - US accounts: `https://openapi.tuyaus.com`
+   - EU accounts: `https://openapi.tuyaeu.com`
+   - CN accounts: `https://openapi.tuyacn.com`
+   - IN accounts: `https://openapi.tuyain.com`
+
+5. **No devices found**
+   - Ensure devices are linked to your Tuya account via Smart Life mobile app
+   - Check that devices are online in the mobile app
+   - Verify your API project has access to your devices (devices must be under the same account)
+
+**Testing Your Connection:**
+Use the "Test Connection" button in Settings before saving to diagnose issues early.
+
 ### Can't connect to devices
 - Verify your API credentials are correct
 - Ensure you selected the correct API endpoint region

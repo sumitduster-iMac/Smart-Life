@@ -294,13 +294,8 @@ ipcMain.handle('test-connection', async () => {
       await tuyaService.initialize(config);
     }
     
-    const isConnected = await tuyaService.testConnection();
-    
-    if (isConnected) {
-      return { success: true, message: 'Successfully connected to Tuya Cloud' };
-    } else {
-      return { success: false, message: 'Failed to connect to Tuya Cloud' };
-    }
+    const result = await tuyaService.testConnection();
+    return { success: true, message: result.message || 'Successfully connected to Tuya Cloud' };
   } catch (error) {
     console.error('Connection test failed:', error);
     return { success: false, message: error.message };

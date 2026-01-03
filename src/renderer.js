@@ -11,6 +11,7 @@ const devicesContainer = document.getElementById('devicesContainer');
 const emptyState = document.getElementById('emptyState');
 const refreshBtn = document.getElementById('refreshBtn');
 const addDeviceBtn = document.getElementById('addDeviceBtn');
+const loadSampleBtn = document.getElementById('loadSampleBtn');
 const connectionStatus = document.getElementById('connectionStatus');
 
 // Modal close buttons
@@ -295,7 +296,13 @@ function setupEventListeners() {
     // Add device button
     addDeviceBtn.addEventListener('click', () => {
         settingsModal.classList.add('active');
-        showNotification('Configure your API settings to add devices', 'info');
+        showNotification('Configure your API settings. Note: Tuya API integration is not yet implemented.', 'info');
+    });
+
+    // Load sample devices button
+    loadSampleBtn.addEventListener('click', async () => {
+        await addSampleDevices();
+        showNotification('Sample devices loaded for testing', 'success');
     });
 
     // Close modal on outside click

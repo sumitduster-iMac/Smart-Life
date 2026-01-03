@@ -9,7 +9,7 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window
-  mainWindow = new BrowserWindow({
+  const windowOptions = {
     width: 1200,
     height: 800,
     minWidth: 800,
@@ -19,10 +19,17 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true
     },
-    icon: path.join(__dirname, '../assets/icon.png'),
     titleBarStyle: 'default',
     show: false
-  });
+  };
+
+  // Add icon if it exists
+  const iconPath = path.join(__dirname, '../assets/icon.png');
+  if (require('fs').existsSync(iconPath)) {
+    windowOptions.icon = iconPath;
+  }
+
+  mainWindow = new BrowserWindow(windowOptions);
 
   // Load the index.html
   mainWindow.loadFile(path.join(__dirname, 'index.html'));

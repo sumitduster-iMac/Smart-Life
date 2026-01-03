@@ -66,10 +66,10 @@ function renderDevices() {
     emptyState.classList.add('hidden');
     
     devicesContainer.innerHTML = devices.map(device => `
-        <div class="device-card" data-device-id="${device.id}">
+        <div class="device-card" data-device-id="${escapeHtml(device.id)}">
             <span class="device-icon">${getDeviceIcon(device.type)}</span>
-            <h3>${device.name}</h3>
-            <p class="device-type">${device.type || 'Smart Device'}</p>
+            <h3>${escapeHtml(device.name)}</h3>
+            <p class="device-type">${escapeHtml(device.type || 'Smart Device')}</p>
             <span class="device-status ${device.online ? 'online' : 'offline'}">
                 ${device.online ? 'Online' : 'Offline'}
             </span>
@@ -89,7 +89,7 @@ function renderDevices() {
 function getDeviceIcon(type) {
     const icons = {
         'light': '💡',
-        'switch': '🔌',
+        'switch': '⚡',
         'thermostat': '🌡️',
         'camera': '📷',
         'lock': '🔒',
@@ -99,6 +99,19 @@ function getDeviceIcon(type) {
         'default': '🏠'
     };
     return icons[type?.toLowerCase()] || icons.default;
+}
+
+// Sanitize HTML to prevent XSS
+function escapeHtml(unsafe) {
+    if (unsafe === null || unsafe === undefined) {
+        return '';
+    }
+    return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 // Open device control modal
@@ -131,19 +144,21 @@ function generateDeviceControls(device) {
 
     // Add type-specific controls
     if (device.type === 'light') {
+        const brightness = parseInt(device.brightness) || 50;
         html += `
             <div class="control-group">
                 <label>Brightness</label>
-                <input type="range" id="brightnessSlider" min="0" max="100" value="${device.brightness || 50}">
+                <input type="range" id="brightnessSlider" min="0" max="100" value="${brightness}">
             </div>
         `;
     }
 
     if (device.type === 'thermostat') {
+        const temperature = parseInt(device.temperature) || 72;
         html += `
             <div class="control-group">
                 <label>Temperature</label>
-                <input type="number" id="tempControl" min="60" max="85" value="${device.temperature || 72}">
+                <input type="number" id="tempControl" min="60" max="85" value="${temperature}">
             </div>
         `;
     }

@@ -161,10 +161,36 @@ You can download pre-built DMG files from the [Actions](https://github.com/sumit
 
 ## 🛠️ Troubleshooting
 
-### App won't start
+### App won't start (Development)
 - Ensure you have Node.js 16+ installed
 - Delete `node_modules` and run `npm install` again
 - Check console for error messages
+
+### "App can't be opened" or "Damaged app" on macOS
+
+**This is the most common issue for unsigned apps on macOS!**
+
+The app is not signed with an Apple Developer certificate, which causes macOS Gatekeeper to block it. This is normal and safe - the app is open source.
+
+**Quick Fix:**
+1. Right-click the **Smart Life** app in Applications
+2. Select "Open" from the menu
+3. Click "Open" in the security dialog
+4. The app will now launch (you only need to do this once)
+
+**Alternative Fix:**
+```bash
+# Remove quarantine attribute from the app
+xattr -cr /Applications/Smart\ Life.app
+```
+
+**For DMG mounting issues:**
+```bash
+# Remove quarantine from downloaded DMG
+xattr -d com.apple.quarantine ~/Downloads/Smart\ Life-*.dmg
+```
+
+**Detailed Instructions:** See [INSTALL.md](INSTALL.md) for comprehensive troubleshooting steps including System Preferences methods.
 
 ### Can't connect to devices
 - Verify your API credentials are correct
@@ -173,9 +199,10 @@ You can download pre-built DMG files from the [Actions](https://github.com/sumit
 - Verify your Tuya project has the necessary API permissions
 
 ### Build fails
-- Ensure you're running on an Intel Mac
+- Ensure you're running on macOS (for DMG builds)
 - Check that electron-builder is installed correctly
 - Try cleaning the project: `rm -rf dist node_modules && npm install`
+- Make sure icon files exist in `assets/` directory
 
 ## 📚 Resources
 

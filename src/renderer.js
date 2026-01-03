@@ -145,7 +145,11 @@ function generateDeviceControls(device) {
 
     // Add type-specific controls
     if (device.type === 'light') {
-        const brightness = parseInt(device.brightness) || 50;
+        // Parse and validate brightness value
+        let brightness = parseInt(device.brightness, 10);
+        if (isNaN(brightness) || brightness < 0 || brightness > 100) {
+            brightness = 50;
+        }
         html += `
             <div class="control-group">
                 <label>Brightness</label>
@@ -155,7 +159,11 @@ function generateDeviceControls(device) {
     }
 
     if (device.type === 'thermostat') {
-        const temperature = parseInt(device.temperature) || 72;
+        // Parse and validate temperature value
+        let temperature = parseInt(device.temperature, 10);
+        if (isNaN(temperature) || temperature < 60 || temperature > 85) {
+            temperature = 72;
+        }
         html += `
             <div class="control-group">
                 <label>Temperature</label>

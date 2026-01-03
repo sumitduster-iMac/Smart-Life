@@ -119,6 +119,7 @@ function openDeviceControl(deviceId) {
     const device = devices.find(d => d.id === deviceId);
     if (!device) return;
 
+    // Using textContent is safe - it doesn't parse HTML
     document.getElementById('deviceName').textContent = device.name;
     
     const controlsHtml = generateDeviceControls(device);

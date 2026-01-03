@@ -1,5 +1,8 @@
 # Smart Life - macOS App
 
+[![Build DMG](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml)
+[![CI](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml)
+
 A native macOS application for controlling your Tuya smart home devices. Built with Electron for Intel Mac compatibility.
 
 ## 🏠 Features
@@ -110,8 +113,14 @@ The app supports various Tuya device types including:
 
 ```
 Smart-Life/
+├── .github/
+│   ├── workflows/
+│   │   ├── build-dmg.yml  # Automated DMG building
+│   │   └── ci.yml         # Continuous integration
+│   └── FUNDING.yml        # Funding configuration
 ├── src/
 │   ├── main.js           # Electron main process
+│   ├── preload.js        # Secure IPC bridge
 │   ├── renderer.js       # Renderer process (UI logic)
 │   ├── index.html        # Main application UI
 │   └── styles.css        # Application styles
@@ -120,6 +129,29 @@ Smart-Life/
 ├── package.json          # Project dependencies and scripts
 └── README.md            # This file
 ```
+
+## 🤖 CI/CD
+
+This project includes automated workflows for continuous integration and deployment:
+
+### Build DMG Workflow
+- **Triggers**: Push to main, tags (v*), pull requests, manual dispatch
+- **Actions**: 
+  - Builds application on macOS runners
+  - Tests with Node.js 18.x and 20.x
+  - Creates DMG and ZIP installers
+  - Uploads artifacts for download
+  - Automatically creates releases for version tags
+
+### CI Workflow
+- **Triggers**: Push to main/develop, pull requests
+- **Actions**:
+  - Validates package.json
+  - Checks JavaScript syntax
+  - Verifies project structure
+  - Ensures all required files are present
+
+You can download pre-built DMG files from the [Actions](https://github.com/sumitduster-iMac/Smart-Life/actions) tab or from [Releases](https://github.com/sumitduster-iMac/Smart-Life/releases) for tagged versions.
 
 ## 🔐 Security
 

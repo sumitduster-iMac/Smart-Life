@@ -108,6 +108,12 @@ body {
     50% { opacity: 0.5; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .status-indicator {
+        animation: none;
+    }
+}
+
 /* Devices Section */
 .devices-section {
     background: var(--card-background);

@@ -1,5 +1,3 @@
-const { ipcRenderer } = require('electron');
-
 // State management
 let devices = [];
 let userConfig = {};
@@ -30,7 +28,7 @@ async function init() {
 // Load user configuration
 async function loadUserConfig() {
     try {
-        userConfig = await ipcRenderer.invoke('get-user-config');
+        userConfig = await window.electronAPI.getUserConfig();
         if (userConfig.apiKey) {
             document.getElementById('apiKey').value = userConfig.apiKey;
         }
@@ -48,7 +46,7 @@ async function loadUserConfig() {
 // Load devices
 async function loadDevices() {
     try {
-        devices = await ipcRenderer.invoke('get-devices');
+        devices = await window.electronAPI.getDevices();
         renderDevices();
     } catch (error) {
         console.error('Error loading devices:', error);
@@ -180,7 +178,7 @@ function setupDeviceControlListeners(device) {
 // Control device via API
 async function controlDevice(deviceId, command) {
     try {
-        const result = await ipcRenderer.invoke('control-device', deviceId, command);
+        const result = await window.electronAPI.controlDevice(deviceId, command);
         if (result.success) {
             showNotification('Command sent successfully', 'success');
             // Update local device state
@@ -251,7 +249,7 @@ function setupEventListeners() {
         };
 
         try {
-            const result = await ipcRenderer.invoke('save-user-config', config);
+            const result = await window.electronAPI.saveUserConfig(config);
             if (result.success) {
                 userConfig = config;
                 updateConnectionStatus();
@@ -290,7 +288,7 @@ function setupEventListeners() {
     });
 
     // Listen for preferences event from menu
-    ipcRenderer.on('open-preferences', () => {
+    window.electronAPI.onOpenPreferences(() => {
         settingsModal.classList.add('active');
     });
 }
@@ -322,7 +320,7 @@ async function addSampleDevices() {
         }
     ];
 
-    await ipcRenderer.invoke('save-devices', sampleDevices);
+    await window.electronAPI.saveDevices(sampleDevices);
     await loadDevices();
 }
 

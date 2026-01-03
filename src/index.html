@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Life - Smart Home Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🏠 Smart Life</h1>
+                <p class="subtitle">Control your smart home devices</p>
+            </div>
+            <button id="settingsBtn" class="settings-btn">⚙️ Settings</button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Connection Status -->
+            <div id="connectionStatus" class="connection-status">
+                <span class="status-indicator"></span>
+                <span class="status-text">Not Connected</span>
+            </div>
+
+            <!-- Devices Section -->
+            <section class="devices-section">
+                <div class="section-header">
+                    <h2>My Devices</h2>
+                    <button id="refreshBtn" class="btn-secondary">🔄 Refresh</button>
+                </div>
+                
+                <div id="devicesContainer" class="devices-grid">
+                    <!-- Devices will be loaded dynamically -->
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📱</div>
+                    <h3>No Devices Found</h3>
+                    <p>Connect your Tuya smart devices to get started.</p>
+                    <button id="addDeviceBtn" class="btn-primary">Add Device</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label for="apiKey">Tuya API Key</label>
+                            <input type="text" id="apiKey" placeholder="Enter your Tuya API Key" required>
+                            <small>Get your API credentials from <a href="https://developer.tuya.com" target="_blank">Tuya Developer Platform</a></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="apiSecret">Tuya API Secret</label>
+                            <input type="password" id="apiSecret" placeholder="Enter your Tuya API Secret" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endpoint">API Endpoint</label>
+                            <select id="endpoint">
+                                <option value="https://openapi.tuyaus.com">United States</option>
+                                <option value="https://openapi.tuyacn.com">China</option>
+                                <option value="https://openapi.tuyaeu.com">Europe</option>
+                                <option value="https://openapi.tuyain.com">India</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                            <button type="submit" class="btn-primary">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Control Modal -->
+        <div id="deviceModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="deviceName">Device Name</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="deviceControls" class="device-controls">
+                        <!-- Device-specific controls will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

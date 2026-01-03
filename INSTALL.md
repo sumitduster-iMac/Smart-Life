@@ -64,17 +64,50 @@
 
 ### "App can't be opened because it is from an unidentified developer"
 
-This happens because the app is not signed with an Apple Developer certificate.
+This happens because the app is not signed with an Apple Developer certificate. This is normal for community-built applications.
+
+**Method 1: Using Right-Click (Easiest)**
+1. Locate the **Smart Life** app in your Applications folder
+2. Right-click (or Control-click) on the app icon
+3. Select "Open" from the contextual menu
+4. Click "Open" in the security dialog that appears
+5. The app will now open and be added to your security exceptions
+
+**Method 2: Using System Preferences**
+1. Try to open Smart Life normally (it will be blocked)
+2. Open **System Preferences** (or **System Settings** on macOS 13+)
+3. Go to **Security & Privacy** (or **Privacy & Security**)
+4. Under the "General" tab, you'll see a message about Smart Life being blocked
+5. Click **"Open Anyway"**
+6. Try opening Smart Life again and confirm when prompted
+
+**Method 3: Using Terminal (For Advanced Users)**
+If the above methods don't work, you can remove the quarantine attribute:
+```bash
+xattr -cr /Applications/Smart\ Life.app
+```
+
+**Important Notes:**
+- You only need to do this once per installation
+- After the first successful launch, macOS will remember your choice
+- This app is safe to run - it's open source and the code is available on GitHub
+
+### "Smart Life is damaged and can't be opened" or DMG won't mount
+
+This can happen on macOS 10.15+ (Catalina and later) due to Gatekeeper.
 
 **Solution**:
-1. Right-click (or Control-click) the app icon
-2. Select "Open" from the menu
-3. Click "Open" in the dialog
+1. Open Terminal (Applications > Utilities > Terminal)
+2. Run this command to remove the quarantine attribute from the DMG:
+   ```bash
+   xattr -d com.apple.quarantine ~/Downloads/Smart\ Life-*.dmg
+   ```
+3. Now try mounting the DMG again
 
-OR
-
-1. Go to System Preferences > Security & Privacy
-2. Click "Open Anyway" next to the Smart Life warning
+**Alternative for the app itself:**
+```bash
+sudo xattr -cr /Applications/Smart\ Life.app
+```
 
 ### No devices showing up
 

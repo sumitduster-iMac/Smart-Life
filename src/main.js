@@ -307,6 +307,56 @@ ipcMain.handle('test-connection', async () => {
   }
 });
 
+// Add IPC handler for getting device details
+ipcMain.handle('get-device-details', async (event, deviceId) => {
+  try {
+    if (!tuyaService.isConnected()) {
+      const config = {
+        apiKey: store.get('apiKey', ''),
+        apiSecret: store.get('apiSecret', ''),
+        endpoint: store.get('endpoint', 'https://openapi.tuyaus.com')
+      };
+      
+      if (!config.apiKey || !config.apiSecret) {
+        throw new Error('API not configured');
+      }
+      
+      await tuyaService.initialize(config);
+    }
+
+    const details = await tuyaService.getDeviceDetails(deviceId);
+    return { success: true, device: details };
+  } catch (error) {
+    console.error(`Error getting device details for ${deviceId}:`, error);
+    return { success: false, message: error.message };
+  }
+});
+
+// Add IPC handler for getting device status
+ipcMain.handle('get-device-status', async (event, deviceId) => {
+  try {
+    if (!tuyaService.isConnected()) {
+      const config = {
+        apiKey: store.get('apiKey', ''),
+        apiSecret: store.get('apiSecret', ''),
+        endpoint: store.get('endpoint', 'https://openapi.tuyaus.com')
+      };
+      
+      if (!config.apiKey || !config.apiSecret) {
+        throw new Error('API not configured');
+      }
+      
+      await tuyaService.initialize(config);
+    }
+
+    const status = await tuyaService.getDeviceStatus(deviceId);
+    return { success: true, status: status };
+  } catch (error) {
+    console.error(`Error getting device status for ${deviceId}:`, error);
+    return { success: false, message: error.message };
+  }
+});
+
 // App lifecycle
 app.whenReady().then(() => {
   console.log('App is ready, creating window...');

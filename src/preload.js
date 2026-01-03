@@ -7,6 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getDevices: () => ipcRenderer.invoke('get-devices'),
   saveDevices: (devices) => ipcRenderer.invoke('save-devices', devices),
   controlDevice: (deviceId, command) => ipcRenderer.invoke('control-device', deviceId, command),
+  getDeviceDetails: (deviceId) => ipcRenderer.invoke('get-device-details', deviceId),
+  getDeviceStatus: (deviceId) => ipcRenderer.invoke('get-device-status', deviceId),
   
   // User configuration
   getUserConfig: () => ipcRenderer.invoke('get-user-config'),

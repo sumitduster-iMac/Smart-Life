@@ -249,12 +249,17 @@ class TuyaService {
    * Transform app commands to Tuya format
    * @param {Object} commands - Commands from app
    * @returns {Array} - Tuya commands array
+   * 
+   * Note: Multiple command codes are sent for each property because different
+   * Tuya device manufacturers use different codes for the same functionality.
+   * The Tuya API will only execute valid commands for each device and ignore
+   * invalid ones, so this approach provides maximum compatibility.
    */
   transformCommands(commands) {
     const tuyaCommands = [];
 
     if (commands.power !== undefined) {
-      // Try common power command codes
+      // Try common power command codes used by different device types
       tuyaCommands.push({
         code: 'switch_led',
         value: commands.power,
@@ -304,10 +309,14 @@ class TuyaService {
     }
 
     try {
-      // Try to make a simple API call to test connection
+      // Use a lightweight endpoint to test connection with minimal data transfer
       const response = await this.context.request({
         method: 'GET',
-        path: '/v1.0/token',
+        path: '/v1.0/devices',
+        query: {
+          page_no: 1,
+          page_size: 1
+        }
       });
 
       return response.success === true;

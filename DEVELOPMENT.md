@@ -161,31 +161,49 @@ const result = await ipcRenderer.invoke('your-api-call', params);
 ## Tuya API Integration
 
 ### Current Implementation
-The current implementation uses placeholders for Tuya API calls. To integrate real Tuya API:
+The Tuya API integration is now **fully implemented** using the `@tuya/tuya-connector-nodejs` SDK.
 
-1. Install Tuya SDK:
-```bash
-npm install @tuya/tuya-connector-nodejs
-```
+**Key Features:**
+- Full device discovery from Tuya Cloud
+- Real-time device control (power, brightness, temperature)
+- Support for multiple device types (lights, plugs, thermostats, switches, fans, cameras, locks, sensors)
+- Multi-region support (US, EU, CN, IN)
+- Connection testing before saving credentials
+- Automatic fallback to cached devices on network errors
 
-2. Initialize in main process:
+**Implementation Details:**
+
+1. Tuya Service Module (`src/services/tuyaService.js`):
+   - Centralized API communication
+   - Device transformation and mapping
+   - Error handling and retry logic
+   - Command translation for different device types
+
+2. Main Process Integration (`src/main.js`):
+   - IPC handlers for device operations
+   - API initialization on config save
+   - Cached device fallback on errors
+
+3. Usage Example:
 ```javascript
-const { TuyaContext } = require('@tuya/tuya-connector-nodejs');
+// In main process
+const tuyaService = require('./services/tuyaService');
 
-const context = new TuyaContext({
-  baseUrl: userConfig.endpoint,
-  accessKey: userConfig.apiKey,
-  secretKey: userConfig.apiSecret
+// Initialize
+await tuyaService.initialize({
+  apiKey: 'your-api-key',
+  apiSecret: 'your-api-secret',
+  endpoint: 'https://openapi.tuyaus.com'
 });
-```
 
-3. Implement API calls:
-```javascript
 // Get devices
-const devices = await context.device.list();
+const devices = await tuyaService.getDevices();
 
 // Control device
-await context.device.commands(deviceId, commands);
+await tuyaService.controlDevice(deviceId, { power: true });
+
+// Test connection
+const isConnected = await tuyaService.testConnection();
 ```
 
 ### API Endpoints

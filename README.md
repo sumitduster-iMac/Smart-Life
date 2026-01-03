@@ -3,15 +3,17 @@
 [![Build DMG](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml)
 [![CI](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml)
 
-A native macOS application for controlling your Tuya smart home devices. Built with Electron for Intel Mac compatibility.
+A native macOS application for controlling your Tuya smart home devices. Built with Electron for Intel Mac compatibility with **full Tuya API integration**.
 
 ## 🏠 Features
 
+- **Full Tuya API Integration**: Complete integration with Tuya IoT Cloud Platform
 - **Device Control**: Control all your Tuya-compatible smart home devices from your Mac
 - **Native macOS Experience**: Built with macOS design principles and native menus
 - **Real-time Updates**: Monitor and control devices in real-time
 - **Secure Storage**: Encrypted storage for API credentials using electron-store
-- **Multi-region Support**: Connect to Tuya cloud servers in different regions
+- **Multi-region Support**: Connect to Tuya cloud servers in different regions (US, EU, CN, IN)
+- **Connection Testing**: Test your API credentials before saving
 - **Intel Mac Optimized**: Specifically built and optimized for Intel-based Macs
 
 ## 📋 Prerequisites
@@ -58,7 +60,11 @@ npm start
 1. Click the **⚙️ Settings** button in the app
 2. Enter your Tuya API Key and API Secret
 3. Select your API endpoint region
-4. Click **Save Settings**
+4. Click **Test Connection** to verify your credentials (optional)
+5. Click **Save Settings**
+6. Click **🔄 Refresh** to load your devices from Tuya Cloud
+
+**Note**: The app will automatically fetch your devices from Tuya Cloud when configured. If you don't have real devices, you can use the "Load Sample Devices" button to test the UI.
 
 ## 🔨 Building for Distribution
 

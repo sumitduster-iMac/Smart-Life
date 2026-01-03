@@ -187,14 +187,14 @@ function setupDeviceControlListeners(device) {
     const brightnessSlider = document.getElementById('brightnessSlider');
     if (brightnessSlider) {
         brightnessSlider.addEventListener('change', async (e) => {
-            await controlDevice(device.id, { brightness: parseInt(e.target.value) });
+            await controlDevice(device.id, { brightness: parseInt(e.target.value, 10) });
         });
     }
 
     const tempControl = document.getElementById('tempControl');
     if (tempControl) {
         tempControl.addEventListener('change', async (e) => {
-            await controlDevice(device.id, { temperature: parseInt(e.target.value) });
+            await controlDevice(device.id, { temperature: parseInt(e.target.value, 10) });
         });
     }
 }

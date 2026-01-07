@@ -39,7 +39,7 @@
                 <div id="emptyState" class="empty-state">
                     <div class="empty-icon">📱</div>
                     <h3>No Devices Found</h3>
-                    <p>Tuya API integration is not yet implemented. Load sample devices to test the UI.</p>
+                    <p>Configure your Tuya API settings to connect your devices. If you don't have real devices, load sample devices to test the UI.</p>
                     <button id="addDeviceBtn" class="btn-primary">Configure API Settings</button>
                     <button id="loadSampleBtn" class="btn-secondary" style="margin-top: 10px;">Load Sample Devices</button>
                 </div>
@@ -54,9 +54,6 @@
                     <button class="close-btn">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-                        <strong>⚠️ Note:</strong> Tuya API integration is not yet implemented. API credentials are stored but not currently used to fetch devices. Use "Load Sample Devices" to test the UI.
-                    </div>
                     <form id="settingsForm">
                         <div class="form-group">
                             <label for="apiKey">Tuya API Key</label>
@@ -78,8 +75,10 @@
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                            <button type="button" id="testConnectionBtn" class="btn-secondary">Test Connection</button>
                             <button type="submit" class="btn-primary">Save Settings</button>
                         </div>
+                        <div id="connectionTestResult" style="margin-top: 15px; padding: 10px; border-radius: 6px; display: none;"></div>
                     </form>
                 </div>
             </div>

@@ -296,7 +296,6 @@ function setupEventListeners() {
     // Add device button
     addDeviceBtn.addEventListener('click', () => {
         settingsModal.classList.add('active');
-        showNotification('Configure your API settings. Note: Tuya API integration is not yet implemented.', 'info');
     });
 
     // Load sample devices button
@@ -304,6 +303,14 @@ function setupEventListeners() {
         await addSampleDevices();
         showNotification('Sample devices loaded for testing', 'success');
     });
+
+    // Test connection button
+    const testConnectionBtn = document.getElementById('testConnectionBtn');
+    if (testConnectionBtn) {
+        testConnectionBtn.addEventListener('click', async () => {
+            await testConnection();
+        });
+    }
 
     // Close modal on outside click
     settingsModal.addEventListener('click', (e) => {
@@ -353,6 +360,65 @@ async function addSampleDevices() {
 
     await window.electronAPI.saveDevices(sampleDevices);
     await loadDevices();
+}
+
+// Test API connection
+async function testConnection() {
+    const resultDiv = document.getElementById('connectionTestResult');
+    const testBtn = document.getElementById('testConnectionBtn');
+    
+    // Get current form values
+    const config = {
+        apiKey: document.getElementById('apiKey').value,
+        apiSecret: document.getElementById('apiSecret').value,
+        endpoint: document.getElementById('endpoint').value
+    };
+
+    // Validate inputs
+    if (!config.apiKey || !config.apiSecret) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#f8d7da';
+        resultDiv.style.border = '1px solid #f5c6cb';
+        resultDiv.style.color = '#721c24';
+        resultDiv.textContent = '❌ Please enter API Key and API Secret';
+        return;
+    }
+
+    // Save config first
+    try {
+        testBtn.disabled = true;
+        testBtn.textContent = 'Testing...';
+        
+        await window.electronAPI.saveUserConfig(config);
+        
+        // Test connection
+        const result = await window.electronAPI.testConnection();
+        
+        resultDiv.style.display = 'block';
+        if (result.success) {
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '1px solid #c3e6cb';
+            resultDiv.style.color = '#155724';
+            resultDiv.textContent = '✅ ' + result.message;
+            showNotification('Connection successful!', 'success');
+        } else {
+            resultDiv.style.backgroundColor = '#f8d7da';
+            resultDiv.style.border = '1px solid #f5c6cb';
+            resultDiv.style.color = '#721c24';
+            resultDiv.textContent = '❌ ' + result.message;
+            showNotification('Connection failed: ' + result.message, 'error');
+        }
+    } catch (error) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#f8d7da';
+        resultDiv.style.border = '1px solid #f5c6cb';
+        resultDiv.style.color = '#721c24';
+        resultDiv.textContent = '❌ Error: ' + error.message;
+        showNotification('Connection test failed', 'error');
+    } finally {
+        testBtn.disabled = false;
+        testBtn.textContent = 'Test Connection';
+    }
 }
 
 // Initialize the app when DOM is ready

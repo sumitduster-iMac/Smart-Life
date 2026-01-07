@@ -27,11 +27,15 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "zip",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "category": "public.app-category.lifestyle",
@@ -68,6 +72,7 @@
     }
   },
   "dependencies": {
+    "@tuya/tuya-connector-nodejs": "^2.1.2",
     "electron-store": "^8.1.0"
   },
   "devDependencies": {

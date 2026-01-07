@@ -3,15 +3,17 @@
 [![Build DMG](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/build-dmg.yml)
 [![CI](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml/badge.svg)](https://github.com/sumitduster-iMac/Smart-Life/actions/workflows/ci.yml)
 
-A native macOS application for controlling your Tuya smart home devices. Built with Electron for Intel Mac compatibility.
+A native macOS application for controlling your Tuya smart home devices. Built with Electron for Intel Mac compatibility with **full Tuya API integration**.
 
 ## 🏠 Features
 
+- **Full Tuya API Integration**: Complete integration with Tuya IoT Cloud Platform
 - **Device Control**: Control all your Tuya-compatible smart home devices from your Mac
 - **Native macOS Experience**: Built with macOS design principles and native menus
 - **Real-time Updates**: Monitor and control devices in real-time
 - **Secure Storage**: Encrypted storage for API credentials using electron-store
-- **Multi-region Support**: Connect to Tuya cloud servers in different regions
+- **Multi-region Support**: Connect to Tuya cloud servers in different regions (US, EU, CN, IN)
+- **Connection Testing**: Test your API credentials before saving
 - **Intel Mac Optimized**: Specifically built and optimized for Intel-based Macs
 
 ## 📋 Prerequisites
@@ -58,7 +60,11 @@ npm start
 1. Click the **⚙️ Settings** button in the app
 2. Enter your Tuya API Key and API Secret
 3. Select your API endpoint region
-4. Click **Save Settings**
+4. Click **Test Connection** to verify your credentials (optional)
+5. Click **Save Settings**
+6. Click **🔄 Refresh** to load your devices from Tuya Cloud
+
+**Note**: The app will automatically fetch your devices from Tuya Cloud when configured. If you don't have real devices, you can use the "Load Sample Devices" button to test the UI.
 
 ## 🔨 Building for Distribution
 
@@ -191,6 +197,42 @@ xattr -d com.apple.quarantine ~/Downloads/Smart\ Life-*.dmg
 ```
 
 **Detailed Instructions:** See [INSTALL.md](INSTALL.md) for comprehensive troubleshooting steps including System Preferences methods.
+
+### Can't connect to Tuya Cloud
+
+**Most Common Issues:**
+
+1. **"Failed to connect to Tuya Cloud"**
+   - Run `npm install` to ensure all dependencies are installed
+   - Verify your API credentials are correct (no extra spaces)
+   - Ensure you selected the correct API endpoint region for your account
+   - Check your internet connection
+
+2. **"Invalid API credentials (signature error)"**
+   - Double-check your API Key (Access ID) and API Secret
+   - Copy credentials carefully from Tuya IoT Platform
+   - Ensure no extra spaces or characters
+
+3. **"Invalid API permissions"**
+   - Go to your Tuya project in [Tuya IoT Platform](https://iot.tuya.com/)
+   - Click "API Products" or "Link Devices"
+   - Enable necessary API permissions (e.g., "IoT Core" APIs)
+   - Subscribe to required API products
+
+4. **"Incorrect endpoint region"**
+   - Verify your data center region in Tuya IoT Platform
+   - US accounts: `https://openapi.tuyaus.com`
+   - EU accounts: `https://openapi.tuyaeu.com`
+   - CN accounts: `https://openapi.tuyacn.com`
+   - IN accounts: `https://openapi.tuyain.com`
+
+5. **No devices found**
+   - Ensure devices are linked to your Tuya account via Smart Life mobile app
+   - Check that devices are online in the mobile app
+   - Verify your API project has access to your devices (devices must be under the same account)
+
+**Testing Your Connection:**
+Use the "Test Connection" button in Settings before saving to diagnose issues early.
 
 ### Can't connect to devices
 - Verify your API credentials are correct

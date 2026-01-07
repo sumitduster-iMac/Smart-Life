@@ -61,13 +61,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Known Limitations
 - Requires manual API credential configuration
-- Tuya API integration uses placeholders (ready for implementation)
-- No automatic device discovery yet
 - Intel Mac only (no Apple Silicon native build in this version)
 - English language only
 
 ### Future Considerations
-- Full Tuya Cloud API integration
 - Apple Silicon (ARM64) support
 - Auto-update functionality
 - Multiple language support
@@ -77,6 +74,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode support
 
 ## [Unreleased]
+
+### Added
+- **Full Tuya API Integration** - Complete integration with Tuya IoT Cloud Platform
+  - Real device discovery from Tuya Cloud
+  - Live device control (power, brightness, temperature)
+  - Support for multiple device types (lights, plugs, thermostats, switches, fans, cameras, locks, sensors)
+  - Connection testing functionality
+  - Automatic device caching with fallback on network errors
+  - Device details and status retrieval
+- Tuya Service Module (`src/services/tuyaService.js`)
+  - Centralized API communication
+  - Device transformation and mapping
+  - Command translation for different device types
+  - Error handling and retry logic
+- Enhanced Settings UI
+  - Test Connection button to verify credentials
+  - Visual feedback for connection status
+  - Improved error messages
+- Documentation updates
+  - Updated README with API integration status
+  - Enhanced DEVELOPMENT.md with implementation details
+
+### Changed
+- IPC handlers now use real Tuya API instead of placeholders
+- Device list refreshes from Tuya Cloud instead of local storage
+- Settings save now initializes Tuya API connection
+- UI messages updated to reflect working API integration
+
+### Technical Updates
+- Added `@tuya/tuya-connector-nodejs` v2.1.2 dependency
+- Implemented proper error handling for API calls
+- Added device status and details IPC handlers
+
+### Known Issues
+- `@tuya/tuya-connector-nodejs` has transitive axios dependencies with known vulnerabilities (no fix available yet from upstream)
+
+## [1.0.0] - 2026-01-03
 
 ### Planned Features
 - Real-time device synchronization with Tuya Cloud
